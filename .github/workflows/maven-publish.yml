@@ -1,0 +1,44 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Java CI-CD Self Hosted
+
+on:
+  push:
+    branches:
+      - feature/javatest
+
+env:
+  IMAGE_NAME: java
+
+jobs:
+
+  build-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Minikube Docker Environment
+        run: |
+          eval $(minikube docker-env)
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Download JAR Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
+
+      - name: Build Docker Image
+        run: docker build -t $IMAGE_NAME:3 .
+
+      - name: Apply Kubernetes Manifests
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+
+

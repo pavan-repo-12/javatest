@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: javatest-deployment
+  namespace: javatest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: javatest
+  template:
+    metadata:
+      labels:
+        app: javatest
+    spec:
+      containers:
+        - name: javatest
+          image: java:2
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 9090
