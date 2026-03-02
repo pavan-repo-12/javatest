@@ -78,7 +78,7 @@ pipeline {
         stage('Commit & Push YAML') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'github-credentials',
+                    credentialsId: 'gitclassictoken',
                     usernameVariable: 'GIT_USERNAME',
                     passwordVariable: 'GIT_TOKEN'
                 )]) {
