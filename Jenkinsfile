@@ -42,20 +42,43 @@ pipeline {
             }
         }
 
-        // stage('Build Docker Image') {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def imageTag = env.BUILD_NUMBER
+                    def fullImageName = "${env.IMAGE_NAME}:${imageTag}"
+                    sh "docker build -t ${fullImageName} ."
+                    env.IMAGE_NAME_FULL = fullImageName
+                }
+            }
+        }
+        
+
+        stage('Update Deployment YAML') {
+            steps {
+                sh """
+                    sed -i "s|image:.*|image: ${env.IMAGE_NAME_FULL}|g" ${env.K8S_DEPLOYMENT_FILE}
+                """
+            }
+        }
+
+        // stage('Commit & Push YAML') {
         //     steps {
         //         script {
-        //             def imageTag = env.BUILD_NUMBER
-        //             def fullImageName = "${env.IMAGE_NAME}:${imageTag}"
-        //             sh "docker build -t ${fullImageName} ."
-        //             env.IMAGE_NAME_FULL = fullImageName
+        //             sh """
+        //                 git config user.name "jenkins"
+        //                 git config user.email "jenkins@ci"
+        //                 git add ${env.K8S_DEPLOYMENT_FILE}
+        //                 git commit -m "Update deployment image to ${env.IMAGE_NAME_FULL} [ci skip]" || echo "No changes to commit"
+        //                 git push origin ${env.GIT_BRANCH}
+        //             """
         //         }
         //     }
         // }
         stage('Commit & Push YAML') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'gitclassictoken',
+                    credentialsId: 'github-credentials',
                     usernameVariable: 'GIT_USERNAME',
                     passwordVariable: 'GIT_TOKEN'
                 )]) {
@@ -71,29 +94,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Update Deployment YAML') {
-            steps {
-                sh """
-                    sed -i "s|image:.*|image: ${env.IMAGE_NAME_FULL}|g" ${env.K8S_DEPLOYMENT_FILE}
-                """
-            }
-        }
-
-        stage('Commit & Push YAML') {
-            steps {
-                script {
-                    sh """
-                        git config user.name "jenkins"
-                        git config user.email "jenkins@ci"
-                        git add ${env.K8S_DEPLOYMENT_FILE}
-                        git commit -m "Update deployment image to ${env.IMAGE_NAME_FULL} [ci skip]" || echo "No changes to commit"
-                        git push origin ${env.GIT_BRANCH}
-                    """
-                }
-            }
-        }
-
         stage('Deploy to Kubernetes') {
             steps {
                 sh """
