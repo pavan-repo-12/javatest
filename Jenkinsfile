@@ -1,5 +1,6 @@
 pipeline {
-    agent jenkinslocal
+        agent { label 'jenkinslocal' }
+ 
 
     environment {
         IMAGE_NAME = "java"                         // Base Docker image name
