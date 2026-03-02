@@ -42,13 +42,32 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        // stage('Build Docker Image') {
+        //     steps {
+        //         script {
+        //             def imageTag = env.BUILD_NUMBER
+        //             def fullImageName = "${env.IMAGE_NAME}:${imageTag}"
+        //             sh "docker build -t ${fullImageName} ."
+        //             env.IMAGE_NAME_FULL = fullImageName
+        //         }
+        //     }
+        // }
+        stage('Commit & Push YAML') {
             steps {
-                script {
-                    def imageTag = env.BUILD_NUMBER
-                    def fullImageName = "${env.IMAGE_NAME}:${imageTag}"
-                    sh "docker build -t ${fullImageName} ."
-                    env.IMAGE_NAME_FULL = fullImageName
+                withCredentials([usernamePassword(
+                    credentialsId: 'gitclassictoken',
+                    usernameVariable: 'GIT_USERNAME',
+                    passwordVariable: 'GIT_TOKEN'
+                )]) {
+                    sh '''
+                        git config user.name "jenkins"
+                        git config user.email "jenkins@ci"
+
+                        git add k8s/deployment.yaml
+                        git commit -m "Update deployment image to ${IMAGE_NAME_FULL} [ci skip]" || echo "No changes to commit"
+
+                        git push https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/pavan-repo-12/javatest.git feature/javatest
+                    '''
                 }
             }
         }
