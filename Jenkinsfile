@@ -47,7 +47,9 @@ pipeline {
                 script {
                     def imageTag = env.BUILD_NUMBER
                     def fullImageName = "${env.IMAGE_NAME}:${imageTag}"
-                    sh "docker build -t ${fullImageName} ."
+                    sh """
+                    eval $(minikube docker-env)
+                    docker build -t ${fullImageName} ."""
                     env.IMAGE_NAME_FULL = fullImageName
                 }
             }
