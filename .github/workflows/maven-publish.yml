@@ -28,13 +28,11 @@ jobs:
         with:
           name: app-jar
           path: target/*.jar
-          
-      - name: Set Minikube Docker Environment
-        run: |
-          eval $(minikube docker-env)
 
       - name: Build Docker Image
-        run: docker build -t $IMAGE_NAME:3 .
+        run: | 
+          eval $(minikube docker-env)
+          docker build -t $IMAGE_NAME:4 .
 
       - name: Apply Kubernetes Manifests
         run: |
