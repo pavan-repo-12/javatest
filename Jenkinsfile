@@ -19,15 +19,15 @@ pipeline {
             }
         }
 
-        stage('Install Maven') {
-            steps {
-                sh '''
-                sudo apt-get update
-                sudo apt-get install -y maven
-                '''
-            }
+        // stage('Install Maven') {
+        //     steps {
+        //         sh '''
+        //         sudo apt-get update
+        //         sudo apt-get install -y maven
+        //         '''
+        //     }
 
-        }    
+        // }    
     
         stage('Build with Maven') {
             steps {
