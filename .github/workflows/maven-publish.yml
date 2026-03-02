@@ -13,7 +13,7 @@ env:
 
 jobs:
 
-  build-deploy:
+  build-unittest:
     runs-on: self-hosted
 
     steps:
@@ -28,6 +28,13 @@ jobs:
         with:
           name: app-jar
           path: target/*.jar
+
+  build-dockerimage:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4    
 
       - name: Build Docker Image
         run: |
@@ -51,6 +58,13 @@ jobs:
           git add k8s/deployment.yaml
           git commit -m "Update deployment image to $IMAGE_NAME [ci skip]" || echo "No changes to commit"
           git push origin feature/javatest
+          
+  deploy-k8s:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4  
 
       - name: Apply Kubernetes Manifests
         run: |
