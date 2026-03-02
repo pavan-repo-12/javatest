@@ -20,10 +20,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set Minikube Docker Environment
-        run: |
-          eval $(minikube docker-env)
-
       - name: Build with Maven
         run: mvn clean package
 
@@ -32,6 +28,10 @@ jobs:
         with:
           name: app-jar
           path: target/*.jar
+          
+      - name: Set Minikube Docker Environment
+        run: |
+          eval $(minikube docker-env)
 
       - name: Build Docker Image
         run: docker build -t $IMAGE_NAME:3 .
