@@ -40,7 +40,7 @@ jobs:
       - name: Update Deployment YAML
         run: |
           IMAGE_NAME=java:${GITHUB_RUN_NUMBER}
-          YAML_FILE=deployment.yaml
+          YAML_FILE=k8s/deployment.yaml
           # Replace the image line in YAML
           sed -i "s|image:.*|image: $IMAGE_NAME|g" k8s/deployment.yaml
         
