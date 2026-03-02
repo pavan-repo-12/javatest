@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME = "java"                         // Base Docker image name
         K8S_DEPLOYMENT_FILE = "k8s/deployment.yaml"
         K8S_SERVICE_FILE = "k8s/service.yaml"
-        GIT_CREDENTIALS_ID = "github-credentials"  // Jenkins GitHub credentials ID
+        GIT_CREDENTIALS_ID = "gitclassictoken"  // Jenkins GitHub credentials ID
         GIT_BRANCH = "feature/javatest"
     }
 
