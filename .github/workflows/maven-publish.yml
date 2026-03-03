@@ -52,14 +52,14 @@ jobs:
           YAML_FILE=k8s/deployment.yaml
           # Replace the image line in YAML
           #sed -i "s|image:.*|image: $IMAGE_NAME|g" k8s/deployment.yaml
-          sed -i "s|tag:.*|tag: $IMAGE_TAG |g" javatest-chart/$HELMVALUES.yaml
+          sed -i "s|tag:.*|tag: $IMAGE_TAG |g" javatest-chart/${{vars.HELMVALUES}}.yaml
 
         
       - name: Commit & Push YAML
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add javatest-chart/$HELMVALUES.yaml
+          git add javatest-chart/${{vars.HELMVALUES}}.yaml
           git commit -m "Update deployment image to $IMAGE_NAME [ci skip]" || echo "No changes to commit"
           git push origin feature/javahelm
 
@@ -73,7 +73,7 @@ jobs:
         uses: actions/checkout@v4  
       - name: Apply helm charts
         run: |
-          helm upgrade --install $CHARTNAME ./javatest-chart   -f javatest-chart/HELMVALUES.yaml 
+          helm upgrade --install ${{vars.CHARTNAME}} ./javatest-chart   -f javatest-chart/${{vars.HELMVALUES}}.yaml 
           
 
 
