@@ -33,4 +33,4 @@ jobs:
 
           ansible-playbook  -i ansible/inventory.ini \
             -e ansible_password="${{ secrets.WIN_PASSWORD }}" \
-            ansible/deploy.yaml
+            ansible/deploy.yml
