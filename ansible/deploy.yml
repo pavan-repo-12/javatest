@@ -40,8 +40,15 @@
         src: ../target/javatest-0.0.1-SNAPSHOT.jar
         dest: C:\Users\vboxuser\Downloads\
 
+    - name: Stop old process if running
+      win_shell: |
+        Get-CimInstance Win32_Process |
+        Where-Object { $_.CommandLine -like "*javatest-0.0.1-SNAPSHOT.jar*" } |
+        ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+      ignore_errors: yes
 
-    # - name: Run the Java application
-    #   ansible.windows.win_shell: |
-    #     Stop-Process -Name java -ErrorAction SilentlyContinue
-    #     Start-Process -FilePath "java" -ArgumentList "-jar C:\deployments\app.jar" -WindowStyle Hidden
+
+    - name: Run the Java application
+      win_shell: |
+
+        Start-Process -FilePath "java" -ArgumentList "-jar  C:\Users\vboxuser\Downloads\javatest-0.0.1-SNAPSHOT.jar" -WindowStyle Hidden
