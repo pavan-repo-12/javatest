@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy-dev:
-    uses: ./.github/workflows/build-and-deploy.yml
+    uses: ./.github/workflows/maven-publish.yml
     environment: dev
 
   # deploy-test:
