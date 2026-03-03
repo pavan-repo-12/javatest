@@ -33,4 +33,4 @@ jobs:
 
           ansible windows -i ansible/inventory.ini \
             -e ansible_password="${{ secrets.WIN_PASSWORD }}" \
-            -m win_ping
+            ansible/deploy.yaml
