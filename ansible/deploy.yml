@@ -38,7 +38,8 @@
     - name: Copy the .jar file to VM
       win_copy:
         src: ../target/javatest-0.0.1-SNAPSHOT.jar
-        dest: C:\Downloads\app.jar
+        dest: C:\Users\vboxuser\Downloads\
+
 
     # - name: Run the Java application
     #   ansible.windows.win_shell: |
