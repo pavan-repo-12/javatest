@@ -1,0 +1,15 @@
+
+namespace: "javadev"
+
+replicaCount: 1
+
+service:
+  type: NodePort
+  nodePort: 30008
+
+image:
+  repository: java 
+  tag: 4
+  pullPolicy: Never
+
+containerPort: 9090

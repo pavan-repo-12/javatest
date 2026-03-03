@@ -1,0 +1,23 @@
+name: Deploy Multi-Environment
+
+on:
+   push:
+    branches:
+      - feature/javahelm
+
+jobs:
+  deploy-dev:
+    uses: ./.github/workflows/build-and-deploy.yml
+    environment: dev
+
+  # deploy-test:
+  #   if: ${{ github.event_name == 'workflow_dispatch' }}
+  #   needs: deploy-dev
+  #   uses: ./.github/workflows/build-and-deploy.yml
+  #   environment: test
+
+  # deploy-prod:
+  #   if: ${{ github.event_name == 'workflow_dispatch' }}
+  #   needs: deploy-test
+  #   uses: ./.github/workflows/build-and-deploy.yml
+  #   environment: prod

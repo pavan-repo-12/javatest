@@ -1,0 +1,13 @@
+
+namespace: "javatest"
+
+replicaCount: 1
+
+service:
+  type: NodePort
+  nodePort: 30007
+
+image:
+  repository: java 
+  tag: 3
+  pullPolicy: Never
