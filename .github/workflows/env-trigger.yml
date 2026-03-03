@@ -1,9 +1,10 @@
 name: Deploy Multi-Environment
 
 on:
-  push:
-    branches:
-      - feature/javahelm
+  workflow_dispatch:  
+  # push:
+  #   branches:
+  #     - feature/javahelm
 
 jobs:
   deploy-dev:
