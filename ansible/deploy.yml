@@ -42,4 +42,4 @@
 
     - name: Restart NSSM service
       win_shell: |
-        nssm restart MyJavaApp
+        nssm restart MyJavaApp3
