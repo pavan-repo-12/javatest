@@ -7,9 +7,12 @@ on:
 
 jobs:
   deploy-dev:
-    uses: ./.github/workflows/maven-publish.yml
+    runs-on: self-hosted
     environment: dev
-
+    steps: 
+    - name: build for dev
+      uses: ./.github/workflows/maven-publish.yml
+      
   # deploy-test:
   #   if: ${{ github.event_name == 'workflow_dispatch' }}
   #   needs: deploy-dev
