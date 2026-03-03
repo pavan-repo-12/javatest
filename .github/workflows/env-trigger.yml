@@ -9,7 +9,7 @@ jobs:
   deploy-dev:
     runs-on: self-hosted                           # Must match runner type
     environment: dev
-    uses: ./.github/workflows/maven-publish.yml  # Job-level call
+    uses: pavan-repo-12javatest/.github/workflows/maven-publish.yml@feature/javahelm  # Job-level call
 
 
   # deploy-test:
