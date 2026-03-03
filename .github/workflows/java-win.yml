@@ -31,6 +31,6 @@ jobs:
           export LANG=en_US.UTF-8
           export LC_ALL=en_US.UTF-8
 
-          ansible windows -i inventory.ini \
+          ansible windows -i ansible/inventory.ini \
             -e ansible_password="${{ secrets.WIN_PASSWORD }}" \
             -m win_ping
