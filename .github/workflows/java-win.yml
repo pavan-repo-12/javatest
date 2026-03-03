@@ -28,6 +28,9 @@ jobs:
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
+          export LANG=en_US.UTF-8
+          export LC_ALL=en_US.UTF-8
+
           ansible windows -i inventory.ini \
             -e ansible_password="${{ secrets.WIN_PASSWORD }}" \
             -m win_ping
