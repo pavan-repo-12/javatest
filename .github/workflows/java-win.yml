@@ -1,0 +1,33 @@
+name: CI-CD Windows Deployment
+
+on:
+  push:
+    branches:
+      - feature/javawin
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Ansible & dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible pywinrm
+
+      - name: Run Ansible Playbook
+        env:
+          WIN_HOST: ${{ secrets.WIN_HOST }}
+          WIN_USER: ${{ secrets.WIN_USER }}
+          WIN_CERT: ${{ secrets.WIN_CERT }}
+          WIN_CERT_PASS: ${{ secrets.WIN_CERT_PASS }}
+        run: |
+          ansible-playbook -i hosts.yml deploy.yml
