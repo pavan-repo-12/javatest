@@ -1,4 +1,4 @@
-name: CI-CD Windows Deployment
+name: CI-CD Ansible Deployment
 
 on:
   push:
@@ -10,33 +10,23 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v4
-    
-      - name: Build with Maven
-        run: mvn clean package
 
-      - name: upload JAR Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-jar
-          path: target/*.jar
+      # - name: Install Ansible
+      #   run: |
+      #     sudo apt update
+      #     sudo apt install -y ansible
+      #     pip install pywinrm requests-ntlm
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-
-      - name: Install Ansible & dependencies
+      - name: Create certificate file from secret
         run: |
-          python -m pip install --upgrade pip
-          pip install ansible pywinrm
+          echo "${{ secrets.WINRM_CERT }}" | base64 -d > win11.crt
 
-      - name: Run Ansible Playbook
+      - name: Run Ansible
         env:
-          WIN_HOST: ${{ secrets.WIN_HOST }}
-          WIN_USER: ${{ secrets.WIN_USER }}
-          WIN_CERT: ${{ secrets.WIN_CERT }}
-          WIN_CERT_PASS: ${{ secrets.WIN_CERT_PASS }}
+          ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
-          ansible-playbook -i hosts.yml deploy.yml
+          ansible windows -i inventory.ini \
+            -e ansible_password="${{ secrets.WIN_PASSWORD }}" \
+            -m win_ping
