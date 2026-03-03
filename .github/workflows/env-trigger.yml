@@ -1,21 +1,16 @@
 name: Deploy Multi-Environment
 
 on:
-   push:
+  push:
     branches:
       - feature/javahelm
 
 jobs:
   deploy-dev:
-    runs-on: self-hosted
+    uses: ./.github/workflows/maven-publish.yml  # Job-level call
+    runs-on: self-hosted                           # Must match runner type
     environment: dev
-    steps: 
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        
-      - name: build for dev
-        uses: ./.github/workflows/maven-publish.yml
-      
+
   # deploy-test:
   #   if: ${{ github.event_name == 'workflow_dispatch' }}
   #   needs: deploy-dev
