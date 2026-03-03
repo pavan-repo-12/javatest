@@ -10,6 +10,9 @@ jobs:
     runs-on: self-hosted
     environment: dev
     steps: 
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        
       - name: build for dev
         uses: ./.github/workflows/maven-publish.yml
       
