@@ -1,0 +1,45 @@
+- name: Deploy Java Application to Windows VM
+  hosts: windows_vm
+  tasks:
+
+    - name: Ensure Chocolatey is installed
+      ansible.windows.win_shell: |
+        if (-Not (Get-Command choco -ErrorAction SilentlyContinue)) {
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+        }
+      args:
+        executable: powershell
+
+    - name: Check Java version
+      ansible.windows.win_command: java -version
+      register: java_check
+      ignore_errors: yes
+
+    - name: Install Java if not present
+      ansible.windows.win_chocolatey:
+        name: jdk17
+        state: present
+      when: java_check.failed
+
+    - name: Check Maven version
+      ansible.windows.win_command: mvn -version
+      register: maven_check
+      ignore_errors: yes
+
+    - name: Install Maven if not present
+      ansible.windows.win_chocolatey:
+        name: maven
+        state: present
+      when: maven_check.failed
+
+    - name: Copy the .jar file to VM
+      ansible.windows.win_copy:
+        src: app.jar
+        dest: C:\deployments\app.jar
+
+    - name: Run the Java application
+      ansible.windows.win_shell: |
+        Stop-Process -Name java -ErrorAction SilentlyContinue
+        Start-Process -FilePath "java" -ArgumentList "-jar C:\deployments\app.jar" -WindowStyle Hidden

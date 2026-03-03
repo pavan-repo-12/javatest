@@ -11,7 +11,16 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+    
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: upload JAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
 
       - name: Set up Python
         uses: actions/setup-python@v4
