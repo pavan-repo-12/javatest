@@ -8,7 +8,8 @@ on:
 jobs:
   deploy-dev:
     uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm  # Job-level call
-   
+    with:
+      envvalue: dev
 
 
   # deploy-test:
