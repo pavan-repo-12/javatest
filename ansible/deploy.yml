@@ -40,26 +40,6 @@
         src: ../target/javatest-0.0.1-SNAPSHOT.jar
         dest: C:\Users\vboxuser\Downloads\
 
-    - name: Stop old process if running
+    - name: Restart NSSM service
       win_shell: |
-        Get-CimInstance Win32_Process |
-        Where-Object { $_.CommandLine -like "*javatest-0.0.1-SNAPSHOT.jar*" } |
-        ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
-      ignore_errors: yes
-    
-    - name: Allow Java executable in firewall
-      win_shell: |
-        New-NetFirewallRule -DisplayName "Allow Java" `
-          -Direction Inbound `
-          -Program "C:\Program Files\Java\jdk-17\bin\java.exe" `
-          -Action Allow `
-          -Profile Any
-      ignore_errors: yes
-
-    - name: Run the Java application
-      win_shell: |
-
-        Start-Process -FilePath "C:\Program Files\Java\jdk-17\bin\java.exe" `
-          -ArgumentList "-jar C:\Users\vboxuser\Downloads\javatest-0.0.1-SNAPSHOT.jar" `
-          -WorkingDirectory "C:\Users\vboxuser\Downloads" `
-          -WindowStyle Hidden
+        nssm restart MyJavaApp
