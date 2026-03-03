@@ -4,8 +4,11 @@
 name: Java CI-CD Self Hosted
 
 on:
-  workflow_call: {}
-
+  workflow_call:
+    inputs:
+      envvalue:
+        required: true
+        type: string
 env:
   IMAGE_NAME: java
 
@@ -30,6 +33,7 @@ jobs:
   build-dockerimage:
     runs-on: self-hosted
     needs: build-unittest
+    #environment: ${{inputs.envvalue}}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4    
@@ -62,6 +66,8 @@ jobs:
   deploy-k8s:
     runs-on: self-hosted
     needs: build-dockerimage
+    #environment: ${{inputs.envvalue}}
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4  
