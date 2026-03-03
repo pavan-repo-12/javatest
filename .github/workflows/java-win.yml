@@ -35,10 +35,10 @@ jobs:
       - name: Run Ansible
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
+          WIN_PASSWORD: ${{ secrets.WIN_PASSWORD }}
         run: |
           export LANG=en_US.UTF-8
           export LC_ALL=en_US.UTF-8
 
           ansible-playbook  -i ansible/inventory.ini \
-            -e ansible_password="${{ secrets.WIN_PASSWORD }}" \
             ansible/deploy.yml
