@@ -46,7 +46,15 @@
         Where-Object { $_.CommandLine -like "*javatest-0.0.1-SNAPSHOT.jar*" } |
         ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
       ignore_errors: yes
-
+    
+    - name: Allow Java executable in firewall
+      win_shell: |
+        New-NetFirewallRule -DisplayName "Allow Java" `
+          -Direction Inbound `
+          -Program "C:\Program Files\Java\jdk-17\bin\java.exe" `
+          -Action Allow `
+          -Profile Any
+      ignore_errors: yes
 
     - name: Run the Java application
       win_shell: |
