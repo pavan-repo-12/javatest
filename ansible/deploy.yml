@@ -51,4 +51,7 @@
     - name: Run the Java application
       win_shell: |
 
-        Start-Process -FilePath "java" -ArgumentList "-jar  C:\Users\vboxuser\Downloads\javatest-0.0.1-SNAPSHOT.jar" -WindowStyle Hidden
+        Start-Process -FilePath "C:\Program Files\Java\jdk-17\bin\java.exe" `
+          -ArgumentList "-jar C:\Users\vboxuser\Downloads\javatest-0.0.1-SNAPSHOT.jar" `
+          -WorkingDirectory "C:\Users\vboxuser\Downloads" `
+          -WindowStyle Hidden
