@@ -21,6 +21,7 @@ jobs:
 
       - name: Create certificate file from secret
         run: |
+          echo "${{ secrets.WINRM_CERT }}"
           echo "${{ secrets.WINRM_CERT }}" | base64 -d > win11.crt
 
       - name: Run Ansible
