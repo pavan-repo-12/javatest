@@ -16,7 +16,7 @@ jobs:
   #   if: ${{ github.event_name == 'workflow_dispatch' }}
   #   needs: deploy-dev
   #   uses: ./.github/workflows/build-and-deploy.yml
-  #   environment: test
+  #   environment: qa
 
   # deploy-prod:
   #   if: ${{ github.event_name == 'workflow_dispatch' }}

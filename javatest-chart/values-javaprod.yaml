@@ -1,0 +1,14 @@
+
+
+replicaCount: 1
+
+service:
+  type: NodePort
+  nodePort: 30009
+
+image:
+  repository: java 
+  tag: 23 
+  pullPolicy: Never
+
+containerPort: 9090

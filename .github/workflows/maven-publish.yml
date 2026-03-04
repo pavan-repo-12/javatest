@@ -73,7 +73,7 @@ jobs:
         uses: actions/checkout@v4  
       - name: Apply helm charts
         run: |
-          helm upgrade --install ${{vars.CHARTNAME}} ./javatest-chart   -f javatest-chart/${{vars.HELMVALUES}}.yaml  --set image.tag=${GITHUB_RUN_NUMBER}  --namespace javadev  --create-namespace
+          helm upgrade --install ${{vars.CHARTNAME}} ./javatest-chart   -f javatest-chart/${{vars.HELMVALUES}}.yaml  --set image.tag=${GITHUB_RUN_NUMBER}  --namespace {{vars.HELM_NAMESPACE}}  --create-namespace
           
 
 
