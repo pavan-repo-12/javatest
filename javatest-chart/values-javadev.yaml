@@ -8,7 +8,7 @@ service:
 
 image:
   repository: java 
-  tag: 23 
+  tag: 24 
   pullPolicy: Never
 
 containerPort: 9090
