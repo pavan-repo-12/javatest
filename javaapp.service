@@ -1,0 +1,10 @@
+[Unit]
+Description=Java Application
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/java -jar /home/vboxuser/myapp/javatest-0.0.1-SNAPSHOT.jar
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

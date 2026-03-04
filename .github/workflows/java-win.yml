@@ -26,16 +26,15 @@ jobs:
       #     sudo apt update
       #     sudo apt install -y ansible
       #     pip install pywinrm requests-ntlm
-
-      - name: Create certificate file from secret
+      - name: Setup SSH Key
         run: |
-          echo "${{ secrets.WINRM_CERT }}"
-          echo "${{ secrets.WINRM_CERT }}" | base64 -d > win11.crt
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+          chmod 600 id_rsa
+
 
       - name: Run Ansible
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
-          WIN_PASSWORD: ${{ secrets.WIN_PASSWORD }}
         run: |
           export LANG=en_US.UTF-8
           export LC_ALL=en_US.UTF-8
