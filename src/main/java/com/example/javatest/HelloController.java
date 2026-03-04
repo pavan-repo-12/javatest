@@ -13,7 +13,7 @@ public class HelloController {
         LocalDateTime now = LocalDateTime.now();
 
         System.out.println("[" + now + "] Request handled by pod: " + podName);
-        return "Hello DevOps World test!";
+        return "Hello DevOps World linux vm!";
     }
  
 }

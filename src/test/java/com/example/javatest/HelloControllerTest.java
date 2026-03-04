@@ -9,7 +9,7 @@ public class HelloControllerTest {
     void testHello() {
         HelloController controller = new HelloController();
         String response = controller.hello();
-        assertEquals("Hello DevOps World test!", response);
+        assertEquals("Hello DevOps World linux vm!", response);
     }
 
 }
