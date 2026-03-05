@@ -5,7 +5,7 @@
   
     - name: Copy the .jar file to VM
       win_copy:
-        src: javatest-0.0.1-SNAPSHOT.jar
+        src: ../javatest-0.0.1-SNAPSHOT.jar
         dest: C:\Users\vboxuser\Downloads\
 
     - name: Restart NSSM service
