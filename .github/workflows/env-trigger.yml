@@ -7,7 +7,8 @@ on:
 
 jobs:
   deploy-dev:
-    uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm  
+    # uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm  
+    uses: ./.github/workflows/maven-publish.yml
     with:
       envvalue: dev
 
