@@ -20,15 +20,16 @@ pipeline {
             }
         }
 
-        // stage('Install Maven') {
-        //     steps {
-        //         sh '''
-        //         sudo apt-get update
-        //         sudo apt-get install -y maven
-        //         '''
-        //     }
+        stage('configure Maven and java') {
+            steps {
+                sh '''
+                sudo apt update
+                sudo apt install -y openjdk-17-jdk
+                sudo apt install -y maven
+                '''
+            }
 
-        // }    
+        }    
     
         stage('Build with Maven') {
             steps {
