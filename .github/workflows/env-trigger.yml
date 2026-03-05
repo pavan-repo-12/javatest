@@ -11,7 +11,10 @@ jobs:
     uses: ./.github/workflows/maven-publish.yml
     with:
       envvalue: dev
-
+    secrets:
+      WINRM_CERT: ${{ secrets.WINRM_CERT }}
+      WIN_PASSWORD: ${{ secrets.WIN_PASSWORD }}
+      ID_RSA: ${{ secrets.ID_RSA }}  
 
   # deploy-test:
   #   needs: deploy-dev
