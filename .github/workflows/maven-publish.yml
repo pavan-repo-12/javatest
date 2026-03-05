@@ -19,6 +19,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      
+      - name: configure java and helm 
+        run: | 
+          sudo apt install openjdk-17-jdk -y
+          sudo apt install maven -y 
 
       - name: Build with Maven
         run: mvn clean package
