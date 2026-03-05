@@ -11,7 +11,7 @@ on:
         type: string
 env:
   IMAGE_NAME: java
-  
+
 jobs:
 
   # build-unittest:
@@ -104,14 +104,13 @@ jobs:
 
       - name: Create certificate file from secret
         run: |
-          echo "$WINRM_CERT"
-          echo "${{ secrets.WINRM_CERT }}"
-          echo "${{ secrets.WINRM_CERT }}" | base64 -d > win11.crt
+          echo "${{ secrets.WINRM_CERT1 }}"
+          echo "${{ secrets.WINRM_CERT1 }}" | base64 -d > win11.crt
 
       - name: Run Ansible
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
-          WIN_PASSWORD: ${{ secrets.WIN_PASSWORD }}
+          WIN_PASSWORD: ${{ secrets.WIN_PASSWORD1 }}
         run: |
           export LANG=en_US.UTF-8
           export LC_ALL=en_US.UTF-8
@@ -140,7 +139,7 @@ jobs:
           
       - name: Setup SSH Key
         run: |
-          echo "${{ secrets.ID_RSA }}" | base64 -d  > id_rsa
+          echo "${{ secrets.ID_RSA1 }}" | base64 -d  > id_rsa
           chmod 600 id_rsa
 
       - name: Run Ansible
