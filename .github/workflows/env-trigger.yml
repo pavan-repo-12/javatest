@@ -3,7 +3,7 @@ name: Deploy Multi-Environment
 on:
   push:
     branches:
-      - feature/javahelm
+      - feature/javasingle
 
 jobs:
   deploy-dev:

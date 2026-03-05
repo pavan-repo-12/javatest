@@ -70,17 +70,17 @@ jobs:
   #         git commit -m "Update deployment image to $IMAGE_NAME [ci skip]" || echo "No changes to commit"
   #         git push origin feature/javahelm
 
-  deploy-k8s:
-    runs-on: self-hosted
-    needs: build-dockerimage
-    environment: ${{inputs.envvalue}}
+  # deploy-k8s:
+  #   runs-on: self-hosted
+  #   needs: build-dockerimage
+  #   environment: ${{inputs.envvalue}}
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4  
-      - name: Apply helm charts
-        run: |
-          helm upgrade --install ${{vars.CHARTNAME}} ./javatest-chart   -f javatest-chart/${{vars.HELMVALUES}}.yaml  --set image.tag=${GITHUB_RUN_NUMBER}  --namespace ${{vars.HELM_NAMESPACE}}  --create-namespace
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v4  
+  #     - name: Apply helm charts
+  #       run: |
+  #         helm upgrade --install ${{vars.CHARTNAME}} ./javatest-chart   -f javatest-chart/${{vars.HELMVALUES}}.yaml  --set image.tag=${GITHUB_RUN_NUMBER}  --namespace ${{vars.HELM_NAMESPACE}}  --create-namespace
           
   deploy-win:
       runs-on: self-hosted
