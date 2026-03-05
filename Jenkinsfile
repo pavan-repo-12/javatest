@@ -66,19 +66,7 @@ pipeline {
             }
         }
 
-        // stage('Commit & Push YAML') {
-        //     steps {
-        //         script {
-        //             sh """
-        //                 git config user.name "jenkins"
-        //                 git config user.email "jenkins@ci"
-        //                 git add ${env.K8S_DEPLOYMENT_FILE}
-        //                 git commit -m "Update deployment image to ${env.IMAGE_NAME_FULL} [ci skip]" || echo "No changes to commit"
-        //                 git push origin ${env.GIT_BRANCH}
-        //             """
-        //         }
-        //     }
-        // }
+
         stage('Commit & Push YAML') {
             steps {
                 withCredentials([usernamePassword(
