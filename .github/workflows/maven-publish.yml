@@ -21,28 +21,28 @@ env:
 
 jobs:
 
-  # build-unittest:
-  #   runs-on: self-hosted
-  #   environment: ${{inputs.envvalue}}
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v4
+  build-unittest:
+    runs-on: self-hosted
+    environment: ${{inputs.envvalue}}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-  #     # - name: configure java and maven 
-  #     #   run: | 
-  #     #     sudo apt update
-  #     #     sudo apt install  -y openjdk-17-jdk 
-  #     #     sudo apt install -y maven  
+      # - name: configure java and maven 
+      #   run: | 
+      #     sudo apt update
+      #     sudo apt install  -y openjdk-17-jdk 
+      #     sudo apt install -y maven  
 
 
-  #     - name: Build with Maven
-  #       run: mvn clean package
+      - name: Build with Maven
+        run: mvn clean package
 
-  #     - name: upload JAR Artifact
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: app-jar
-  #         path: target/*.jar
+      - name: upload JAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
 
   # build-dockerimage:
   #   runs-on: self-hosted
