@@ -104,10 +104,10 @@ jobs:
       #     sudo apt install -y ansible
       #     pip3 install pywinrm requests-ntlm
 
-      # - name: download JAR Artifact
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: app-jar
+      - name: download JAR Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
 
       - name: Create certificate file from secret
         run: |
