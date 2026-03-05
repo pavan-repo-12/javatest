@@ -13,19 +13,26 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: configure java and helm 
+        run: | 
+          sudo apt install openjdk-17-jdk -y
+          sudo apt install maven -y 
+
+
       - name: Build with Maven
         run: mvn clean package
 
-      # - name: upload JAR Artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: app-jar
-      #     path: target/*.jar
-      # - name: Install Ansible
-      #   run: |
-      #     sudo apt update
-      #     sudo apt install -y ansible
-      #     pip install pywinrm requests-ntlm
+      - name: upload JAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
+          
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible
+          pip install pywinrm requests-ntlm
 
       - name: Create certificate file from secret
         run: |
