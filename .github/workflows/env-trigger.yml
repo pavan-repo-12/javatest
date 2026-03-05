@@ -7,19 +7,19 @@ on:
 
 jobs:
   deploy-dev:
-    uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm  # Job-level call
+    uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm  
     with:
       envvalue: dev
 
 
-  # deploy-test:
-  #   if: ${{ github.event_name == 'workflow_dispatch' }}
-  #   needs: deploy-dev
-  #   uses: ./.github/workflows/build-and-deploy.yml
-  #   environment: qa
+  deploy-test:
+    needs: deploy-dev
+    uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm
+    with:
+      envvalue: qa
 
-  # deploy-prod:
-  #   if: ${{ github.event_name == 'workflow_dispatch' }}
-  #   needs: deploy-test
-  #   uses: ./.github/workflows/build-and-deploy.yml
-  #   environment: prod
+  deploy-prod:
+    needs: deploy-test
+    uses: .pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm
+    with:
+      envvalue: prod
