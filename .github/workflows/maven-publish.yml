@@ -85,7 +85,7 @@ jobs:
   deploy-win:
       runs-on: self-hosted
       needs: build-unittest
-      environment: ${{inputs.envvalue}}
+      
   
       steps:
       - name: Checkout Code
@@ -101,7 +101,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: app-jar
-          
+
       - name: Create certificate file from secret
         run: |
           echo "${{ secrets.WINRM_CERT }}"
@@ -121,7 +121,7 @@ jobs:
   deploy-linux:
       runs-on: self-hosted
       needs: deploy-win
-      environment: ${{inputs.envvalue}}
+     
   
       steps:
       - name: Checkout Code
