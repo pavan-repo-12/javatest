@@ -75,7 +75,7 @@ jobs:
           git config user.email "actions@github.com"
           git add javatest-chart/${{vars.HELMVALUES}}.yaml
           git commit -m "Update deployment image to $IMAGE_NAME [ci skip]" || echo "No changes to commit"
-          git push origin feature/javahelm
+          git push origin feature/javasingle
 
   deploy-k8s:
     runs-on: self-hosted
@@ -91,7 +91,7 @@ jobs:
           
   deploy-win:
       runs-on: self-hosted
-      needs: build-unittest
+      needs: deploy-k8s
       environment: ${{inputs.envvalue}}
   
       steps:
