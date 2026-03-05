@@ -31,7 +31,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y ansible
-          pip install pywinrm requests-ntlm
+          pip3 install pywinrm requests-ntlm
       - name: Setup SSH Key
         run: |
           echo "${{ secrets.ID_RSA }}" | base64 -d  > id_rsa
