@@ -44,50 +44,50 @@ jobs:
           name: app-jar
           path: target/*.jar
 
-  # build-dockerimage:
-  #   runs-on: self-hosted
-  #   needs: build-unittest
-  #   environment: ${{inputs.envvalue}}
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v4   
+  build-dockerimage:
+    runs-on: self-hosted
+    needs: build-unittest
+    environment: ${{inputs.envvalue}}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4   
 
-  #     - name: Build Docker Image
-  #       run: |
-  #         eval $(minikube docker-env)
-  #         IMAGE_TAG=${GITHUB_RUN_NUMBER}
-  #         IMAGE_NAME=java:$IMAGE_TAG
-  #         docker build -t $IMAGE_NAME .
-  #         echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
-  #         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-  #     - name: Update Deployment YAML
-  #       run: |
-  #         IMAGE_NAME=java:${GITHUB_RUN_NUMBER}
-  #         YAML_FILE=k8s/deployment.yaml
-  #         # Replace the image line in YAML
-  #         #sed -i "s|image:.*|image: $IMAGE_NAME|g" k8s/deployment.yaml
-  #         sed -i "s|tag:.*|tag: $IMAGE_TAG |g" javatest-chart/${{vars.HELMVALUES}}.yaml
+      - name: Build Docker Image
+        run: |
+          eval $(minikube docker-env)
+          IMAGE_TAG=${GITHUB_RUN_NUMBER}
+          IMAGE_NAME=java:$IMAGE_TAG
+          docker build -t $IMAGE_NAME .
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+      - name: Update Deployment YAML
+        run: |
+          IMAGE_NAME=java:${GITHUB_RUN_NUMBER}
+          YAML_FILE=k8s/deployment.yaml
+          # Replace the image line in YAML
+          #sed -i "s|image:.*|image: $IMAGE_NAME|g" k8s/deployment.yaml
+          sed -i "s|tag:.*|tag: $IMAGE_TAG |g" javatest-chart/${{vars.HELMVALUES}}.yaml
 
         
-  #     - name: Commit & Push YAML
-  #       run: |
-  #         git config user.name "github-actions"
-  #         git config user.email "actions@github.com"
-  #         git add javatest-chart/${{vars.HELMVALUES}}.yaml
-  #         git commit -m "Update deployment image to $IMAGE_NAME [ci skip]" || echo "No changes to commit"
-  #         git push origin feature/javahelm
+      - name: Commit & Push YAML
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add javatest-chart/${{vars.HELMVALUES}}.yaml
+          git commit -m "Update deployment image to $IMAGE_NAME [ci skip]" || echo "No changes to commit"
+          git push origin feature/javahelm
 
-  # deploy-k8s:
-  #   runs-on: self-hosted
-  #   needs: build-dockerimage
-  #   environment: ${{inputs.envvalue}}
+  deploy-k8s:
+    runs-on: self-hosted
+    needs: build-dockerimage
+    environment: ${{inputs.envvalue}}
 
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v4  
-  #     - name: Apply helm charts
-  #       run: |
-  #         helm upgrade --install ${{vars.CHARTNAME}} ./javatest-chart   -f javatest-chart/${{vars.HELMVALUES}}.yaml  --set image.tag=${GITHUB_RUN_NUMBER}  --namespace ${{vars.HELM_NAMESPACE}}  --create-namespace
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4  
+      - name: Apply helm charts
+        run: |
+          helm upgrade --install ${{vars.CHARTNAME}} ./javatest-chart   -f javatest-chart/${{vars.HELMVALUES}}.yaml  --set image.tag=${GITHUB_RUN_NUMBER}  --namespace ${{vars.HELM_NAMESPACE}}  --create-namespace
           
   deploy-win:
       runs-on: self-hosted
@@ -139,7 +139,7 @@ jobs:
       #     sudo apt install -y ansible
       #     pip3 install pywinrm requests-ntlm
 
-      - name: upload JAR Artifact
+      - name: download JAR Artifact
         uses: actions/download-artifact@v4
         with:
           name: app-jar
