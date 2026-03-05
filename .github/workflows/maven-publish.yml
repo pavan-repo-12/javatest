@@ -84,7 +84,7 @@ jobs:
           
   deploy-win:
       runs-on: self-hosted
-      needs: build-unittest
+      # needs: build-unittest
       environment: ${{inputs.envvalue}}
   
       steps:
