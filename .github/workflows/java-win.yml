@@ -33,7 +33,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y ansible
-          pip install pywinrm requests-ntlm
+          pip3 install pywinrm requests-ntlm
 
       - name: Create certificate file from secret
         run: |
