@@ -12,14 +12,14 @@ jobs:
       envvalue: dev
 
 
-  deploy-test:
-    needs: deploy-dev
-    uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm
-    with:
-      envvalue: qa
+  # deploy-test:
+  #   needs: deploy-dev
+  #   uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm
+  #   with:
+  #     envvalue: qa
 
-  deploy-prod:
-    needs: deploy-test
-    uses: .pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm
-    with:
-      envvalue: prod
+  # deploy-prod:
+  #   needs: deploy-test
+  #   uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm
+  #   with:
+  #     envvalue: prod

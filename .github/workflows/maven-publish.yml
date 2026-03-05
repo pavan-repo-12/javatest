@@ -21,11 +21,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: configure java and maven 
-        run: | 
-          sudo apt update
-          sudo apt install  -y openjdk-17-jdk 
-          sudo apt install -y maven  
+      # - name: configure java and maven 
+      #   run: | 
+      #     sudo apt update
+      #     sudo apt install  -y openjdk-17-jdk 
+      #     sudo apt install -y maven  
 
 
       - name: Build with Maven
@@ -37,38 +37,38 @@ jobs:
           name: app-jar
           path: target/*.jar
 
-  build-dockerimage:
-    runs-on: self-hosted
-    needs: build-unittest
-    environment: ${{inputs.envvalue}}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4    
+  # build-dockerimage:
+  #   runs-on: self-hosted
+  #   needs: build-unittest
+  #   environment: ${{inputs.envvalue}}
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v4   
 
-      - name: Build Docker Image
-        run: |
-          eval $(minikube docker-env)
-          IMAGE_TAG=${GITHUB_RUN_NUMBER}
-          IMAGE_NAME=java:$IMAGE_TAG
-          docker build -t $IMAGE_NAME .
-          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-      - name: Update Deployment YAML
-        run: |
-          IMAGE_NAME=java:${GITHUB_RUN_NUMBER}
-          YAML_FILE=k8s/deployment.yaml
-          # Replace the image line in YAML
-          #sed -i "s|image:.*|image: $IMAGE_NAME|g" k8s/deployment.yaml
-          sed -i "s|tag:.*|tag: $IMAGE_TAG |g" javatest-chart/${{vars.HELMVALUES}}.yaml
+  #     - name: Build Docker Image
+  #       run: |
+  #         eval $(minikube docker-env)
+  #         IMAGE_TAG=${GITHUB_RUN_NUMBER}
+  #         IMAGE_NAME=java:$IMAGE_TAG
+  #         docker build -t $IMAGE_NAME .
+  #         echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+  #         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+  #     - name: Update Deployment YAML
+  #       run: |
+  #         IMAGE_NAME=java:${GITHUB_RUN_NUMBER}
+  #         YAML_FILE=k8s/deployment.yaml
+  #         # Replace the image line in YAML
+  #         #sed -i "s|image:.*|image: $IMAGE_NAME|g" k8s/deployment.yaml
+  #         sed -i "s|tag:.*|tag: $IMAGE_TAG |g" javatest-chart/${{vars.HELMVALUES}}.yaml
 
         
-      - name: Commit & Push YAML
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add javatest-chart/${{vars.HELMVALUES}}.yaml
-          git commit -m "Update deployment image to $IMAGE_NAME [ci skip]" || echo "No changes to commit"
-          git push origin feature/javahelm
+  #     - name: Commit & Push YAML
+  #       run: |
+  #         git config user.name "github-actions"
+  #         git config user.email "actions@github.com"
+  #         git add javatest-chart/${{vars.HELMVALUES}}.yaml
+  #         git commit -m "Update deployment image to $IMAGE_NAME [ci skip]" || echo "No changes to commit"
+  #         git push origin feature/javahelm
 
   deploy-k8s:
     runs-on: self-hosted
@@ -82,5 +82,74 @@ jobs:
         run: |
           helm upgrade --install ${{vars.CHARTNAME}} ./javatest-chart   -f javatest-chart/${{vars.HELMVALUES}}.yaml  --set image.tag=${GITHUB_RUN_NUMBER}  --namespace ${{vars.HELM_NAMESPACE}}  --create-namespace
           
+  deploy-win:
+      runs-on: self-hosted
+      needs: build-unittest
+      environment: ${{inputs.envvalue}}
+  
+      steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      # - name: Install Ansible
+      #   run: |
+      #     sudo apt update
+      #     sudo apt install -y ansible
+      #     pip3 install pywinrm requests-ntlm
+
+      - name: upload JAR Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+
+      - name: Create certificate file from secret
+        run: |
+          echo "${{ secrets.WINRM_CERT }}"
+          echo "${{ secrets.WINRM_CERT }}" | base64 -d > win11.crt
+
+      - name: Run Ansible
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
+          WIN_PASSWORD: ${{ secrets.WIN_PASSWORD }}
+        run: |
+          export LANG=en_US.UTF-8
+          export LC_ALL=en_US.UTF-8
+
+          ansible-playbook  -i ansible_win/inventory.ini \
+            ansible_win/deploy.yml
+
+  deploy-linux:
+      runs-on: self-hosted
+      needs: deploy-win
+      environment: ${{inputs.envvalue}}
+  
+      steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4 
+      # - name: Install Ansible
+      #   run: |
+      #     sudo apt update
+      #     sudo apt install -y ansible
+      #     pip3 install pywinrm requests-ntlm
+
+      - name: upload JAR Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          
+      - name: Setup SSH Key
+        run: |
+          echo "${{ secrets.ID_RSA }}" | base64 -d  > id_rsa
+          chmod 600 id_rsa
+
+      - name: Run Ansible
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
+        run: |
+          export LANG=en_US.UTF-8
+          export LC_ALL=en_US.UTF-8
+
+          ansible-playbook  -i ansible_linux/inventory.ini \
+            ansible_linux/deploy.yml
 
 
