@@ -11,7 +11,7 @@ on:
         type: string
 env:
   IMAGE_NAME: java
-  WINRM_CERT: ${{ secrets.WINRM_CERT }}
+  
 jobs:
 
   # build-unittest:
