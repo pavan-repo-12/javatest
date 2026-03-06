@@ -48,6 +48,7 @@ jobs:
           path: target/*.jar
 
   build-dockerimage:
+    if: ${{ inputs.deploy_target == 'k8s' }}
     runs-on: self-hosted
     needs: build-unittest
     environment: ${{inputs.envvalue}}
@@ -83,6 +84,7 @@ jobs:
   deploy-k8s:
     if: ${{ inputs.deploy_target == 'k8s' }}
     runs-on: self-hosted
+    needs: build-dockerimage
     environment: ${{inputs.envvalue}}
 
     steps:
@@ -95,6 +97,7 @@ jobs:
   deploy-win:
       if: ${{ inputs.deploy_target == 'windows' }}
       runs-on: self-hosted
+      needs: build-unittest
       environment: ${{inputs.envvalue}}
   
       steps:
@@ -131,6 +134,7 @@ jobs:
   deploy-linux:
       if: ${{ inputs.deploy_target == 'linux'}}
       runs-on: self-hosted
+      needs: build-unittest
       environment: ${{inputs.envvalue}}
   
       steps:
