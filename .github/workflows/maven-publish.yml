@@ -93,7 +93,7 @@ jobs:
           helm upgrade --install ${{vars.CHARTNAME}} ./javatest-chart   -f javatest-chart/${{vars.HELMVALUES}}.yaml  --set image.tag=${GITHUB_RUN_NUMBER}  --namespace ${{vars.HELM_NAMESPACE}}  --create-namespace
           
   deploy-win:
-      if: ${{ inputs.deploy_target == 'windows'
+      if: ${{ inputs.deploy_target == 'windows' }}
       runs-on: self-hosted
       environment: ${{inputs.envvalue}}
   
