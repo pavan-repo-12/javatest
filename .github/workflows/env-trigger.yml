@@ -2,14 +2,30 @@ name: Deploy Multi-Environment
 
 on:
   push:
-    branches:
-      - feature/javasingle
+  workflow_dispatch:
+    inputs:
+      envvalue:
+        description: "Select Environment"
+        required: true
+        type: choice
+        options:
+          - dev
+
+      deploy_target:
+        description: "Where to deploy?"
+        required: true
+        type: choice
+        options:
+          - k8s
+          - windows
+          - linux
 
 jobs:
   deploy-dev:
     uses: ./.github/workflows/maven-publish.yml
     with:
-      envvalue: dev
+      envvalue: ${{ inputs.envvalue }}
+      deploy_target: ${{ inputs.deploy_target }}      
     secrets:
       WINRM_CERT: ${{ secrets.WINRM_CERT }}
       WIN_PASSWORD: ${{ secrets.WIN_PASSWORD }}

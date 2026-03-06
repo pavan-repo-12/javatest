@@ -9,6 +9,9 @@ on:
       envvalue:
         required: true
         type: string
+      deploy_target:
+        required: true
+        type: string
     secrets:
       WINRM_CERT:
         required: true
@@ -78,8 +81,8 @@ jobs:
           git push origin feature/javasingle
 
   deploy-k8s:
+    if: ${{ inputs.deploy_target == 'k8s' }}
     runs-on: self-hosted
-    needs: build-dockerimage
     environment: ${{inputs.envvalue}}
 
     steps:
@@ -90,8 +93,8 @@ jobs:
           helm upgrade --install ${{vars.CHARTNAME}} ./javatest-chart   -f javatest-chart/${{vars.HELMVALUES}}.yaml  --set image.tag=${GITHUB_RUN_NUMBER}  --namespace ${{vars.HELM_NAMESPACE}}  --create-namespace
           
   deploy-win:
+      if: ${{ inputs.deploy_target == 'windows'
       runs-on: self-hosted
-      needs: deploy-k8s
       environment: ${{inputs.envvalue}}
   
       steps:
@@ -126,8 +129,8 @@ jobs:
             ansible_win/deploy.yml
 
   deploy-linux:
+      if: ${{ inputs.deploy_target == 'linux'}}
       runs-on: self-hosted
-      needs: deploy-win
       environment: ${{inputs.envvalue}}
   
       steps:
