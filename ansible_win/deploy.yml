@@ -1,0 +1,13 @@
+- name: Deploy Java Application to Windows VM
+  hosts: windows
+  gather_facts: no
+  tasks:  
+  
+    - name: Copy the .jar file to VM
+      win_copy:
+        src: ../javatest-0.0.1-SNAPSHOT.jar
+        dest: C:\Users\vboxuser\Downloads\
+
+    - name: Restart NSSM service
+      win_shell: |
+        nssm restart MyJavaApp3

@@ -1,0 +1,59 @@
+- name: Deploy Java Application
+  hosts: app
+  become: yes
+
+  tasks:
+
+    - name: Check Java version
+      command: java -version
+      register: java_check
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Install Java 17 if not installed
+      apt:
+        name: openjdk-17-jdk
+        state: present
+        update_cache: yes
+      when: java_check.rc != 0 or "'17' not in java_check.stderr"
+
+    - name: Ensure application directory exists
+      file:
+        path: /home/vboxuser/myapp
+        state: directory
+        owner: vboxuser
+        group: vboxuser
+        mode: '0755'
+
+    - name: Copy JAR file
+      copy:
+        src: ../javatest-0.0.1-SNAPSHOT.jar
+        dest: /home/vboxuser/myapp/javatest-0.0.1-SNAPSHOT.jar
+        owner: vboxuser
+        group: vboxuser
+        mode: '0755'
+
+    - name: Check if service file exists
+      stat:
+        path: /etc/systemd/system/javaapp.service
+      register: service_file
+
+    - name: Copy service file if not present
+      copy:
+        src: ../javaapp.service
+        dest: /etc/systemd/system/javaapp.service
+      when: not service_file.stat.exists
+
+    - name: Reload systemd
+      command: systemctl daemon-reload
+      when: not service_file.stat.exists
+
+    - name: Enable service
+      systemd:
+        name: javaapp
+        enabled: yes
+
+    - name: Start/Restart service
+      systemd:
+        name: javaapp
+        state: restarted

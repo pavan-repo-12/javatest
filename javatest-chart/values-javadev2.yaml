@@ -1,0 +1,14 @@
+
+
+replicaCount: 1
+
+service:
+  type: NodePort
+  nodePort: 30011
+
+image:
+  repository: pavan0411199/java-test
+  tag:  40 
+  pullPolicy: Always
+
+containerPort: 9090

@@ -1,0 +1,43 @@
+name: Deploy Multi-Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      envvalue:
+        description: "Select Environment"
+        required: true
+        type: choice
+        options:
+          - dev
+
+      deploy_target:
+        description: "Where to deploy?"
+        required: true
+        type: choice
+        options:
+          - k8s
+          - windows
+          - linux
+
+jobs:
+  deploy-dev:
+    uses: ./.github/workflows/maven-publish.yml
+    with:
+      envvalue: ${{ inputs.envvalue }}
+      deploy_target: ${{ inputs.deploy_target }}      
+    secrets:
+      WINRM_CERT: ${{ secrets.WINRM_CERT }}
+      WIN_PASSWORD: ${{ secrets.WIN_PASSWORD }}
+      ID_RSA: ${{ secrets.ID_RSA }}  
+
+  # deploy-test:
+  #   needs: deploy-dev
+  #   uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm
+  #   with:
+  #     envvalue: qa
+
+  # deploy-prod:
+  #   needs: deploy-test
+  #   uses: pavan-repo-12/javatest/.github/workflows/maven-publish.yml@feature/javahelm
+  #   with:
+  #     envvalue: prod
