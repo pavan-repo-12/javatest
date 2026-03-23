@@ -39,6 +39,14 @@ pipeline {
             }
         }
 
+        stage('Snyk Security Scan') {
+            steps {
+                sh """
+               snyk monitor --all-projects --org=6b376763-31f1-4d40-a030-2dff2da4c843 --severity-threshold=high
+                """
+            }
+        }
+
         stage('Archive JAR') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
@@ -140,7 +148,7 @@ pipeline {
                         export ANSIBLE_HOST_KEY_CHECKING=False
                         export LANG=en_US.UTF-8
                         export LC_ALL=en_US.UTF-8
-                        
+
                         # Copy cert locally if needed
                         ls -l 
                         ansible-playbook -i ansible_win/inventory.ini \
