@@ -132,8 +132,7 @@ pipeline {
                         export LC_ALL=en_US.UTF-8
 
                         ansible-playbook -i ansible_linux/inventory.ini \
-                        ansible_linux/deploy.yml \
-                        --private-key $SSH_KEY
+                        ansible_linux/deploy.yml
                     '''
                 }
             }
