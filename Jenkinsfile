@@ -43,7 +43,7 @@ pipeline {
             steps {
                 sh """
                  
-                snyk monitor --all-projects --org=6b376763-31f1-4d40-a030-2dff2da4c843 
+                snyk monitor  --org=6b376763-31f1-4d40-a030-2dff2da4c843 
                 """
             }
         }
