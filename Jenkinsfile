@@ -143,23 +143,20 @@ pipeline {
             steps {
                 withCredentials([
                     string(credentialsId: "${WIN_PASSWORD_ID}", variable: 'WIN_PASSWORD'),
-                    file(credentialsId: "${WINRM_CERT_ID}", variable: 'WIN_CERT')
+                    file(credentialsId: "${WIN_CERT_ID}", variable: 'WIN_CERT')
                 ]) {
-                    sh """
+                    sh '''
                         export ANSIBLE_HOST_KEY_CHECKING=False
                         export LANG=en_US.UTF-8
                         export LC_ALL=en_US.UTF-8
 
-                        # Copy cert locally if needed
-                        ls -l 
                         ansible-playbook -i ansible_win/inventory.ini \
                         ansible_win/deploy.yml \
                         --extra-vars "ansible_password=$WIN_PASSWORD"
-                    """
+                    '''
                 }
             }
         }
-
 
     }
     
