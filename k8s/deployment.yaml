@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: javatest
-          image: java:3
+          image: java:4
           imagePullPolicy: Never
           ports:
             - containerPort: 9090
