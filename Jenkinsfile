@@ -9,6 +9,8 @@ pipeline {
         GIT_CREDENTIALS_ID = "gitclassictoken"  // Jenkins GitHub credentials ID
         GIT_BRANCH = "feature/javawinlinvm"
         SSH_CREDENTIALS_ID = "linuxvmkey"
+        WINRM_CERT_ID = "win11crt"             // Secret file or string
+        WIN_PASSWORD_ID = "winpaswd"    
     }
 
     stages {
@@ -128,27 +130,27 @@ pipeline {
             }
         }
 
-        // stage('Deploy to Windows') {
-        //     steps {
-        //         withCredentials([
-        //             string(credentialsId: "${WIN_PASSWORD_ID}", variable: 'WIN_PASSWORD'),
-        //             file(credentialsId: "${WINRM_CERT_ID}", variable: 'WIN_CERT')
-        //         ]) {
-        //             sh '''
-        //                 export ANSIBLE_HOST_KEY_CHECKING=False
-        //                 export LANG=en_US.UTF-8
-        //                 export LC_ALL=en_US.UTF-8
+        stage('Deploy to Windows') {
+            steps {
+                withCredentials([
+                    string(credentialsId: "${WIN_PASSWORD_ID}", variable: 'WIN_PASSWORD'),
+                    file(credentialsId: "${WINRM_CERT_ID}", variable: 'WIN_CERT')
+                ]) {
+                    sh '''
+                        export ANSIBLE_HOST_KEY_CHECKING=False
+                        export LANG=en_US.UTF-8
+                        export LC_ALL=en_US.UTF-8
 
-        //                 # Copy cert locally if needed
-        //                 cp $WIN_CERT win11.crt
+                        # Copy cert locally if needed
+                        cp $WIN_CERT win11.crt
 
-        //                 ansible-playbook -i ansible_win/inventory.ini \
-        //                 ansible_win/deploy.yml \
-        //                 --extra-vars "ansible_password=$WIN_PASSWORD"
-        //             '''
-        //         }
-        //     }
-        // }
+                        ansible-playbook -i ansible_win/inventory.ini \
+                        ansible_win/deploy.yml \
+                        --extra-vars "ansible_password=$WIN_PASSWORD"
+                    '''
+                }
+            }
+        }
 
 
     }
