@@ -113,7 +113,8 @@ pipeline {
                     keyFileVariable: 'SSH_KEY'
                 )]) {
                     sh '''
-                        chmod 600 $SSH_KEY
+                        cp $SSH_KEY id_rsa
+                        chmod 600 id_rsa
 
                         export ANSIBLE_HOST_KEY_CHECKING=False
                         export LANG=en_US.UTF-8
