@@ -7,7 +7,8 @@ pipeline {
         K8S_DEPLOYMENT_FILE = "k8s/deployment.yaml"
         K8S_SERVICE_FILE = "k8s/service.yaml"
         GIT_CREDENTIALS_ID = "gitclassictoken"  // Jenkins GitHub credentials ID
-        GIT_BRANCH = "feature/javatest"
+        GIT_BRANCH = "feature/javawinlinvm"
+        SSH_CREDENTIALS_ID = "linuxvmkey"
     }
 
     stages {
@@ -105,14 +106,60 @@ pipeline {
                 """
             }
         }
+        stage('Deploy to Linux') {
+            steps {
+                withCredentials([sshUserPrivateKey(
+                    credentialsId: "${SSH_CREDENTIALS_ID}",
+                    keyFileVariable: 'SSH_KEY'
+                )]) {
+                    sh '''
+                        chmod 600 $SSH_KEY
+
+                        export ANSIBLE_HOST_KEY_CHECKING=False
+                        export LANG=en_US.UTF-8
+                        export LC_ALL=en_US.UTF-8
+
+                        ansible-playbook -i ansible_linux/inventory.ini \
+                        ansible_linux/deploy.yml \
+                        --private-key $SSH_KEY
+                    '''
+                }
+            }
+        }
+
+        // stage('Deploy to Windows') {
+        //     steps {
+        //         withCredentials([
+        //             string(credentialsId: "${WIN_PASSWORD_ID}", variable: 'WIN_PASSWORD'),
+        //             file(credentialsId: "${WINRM_CERT_ID}", variable: 'WIN_CERT')
+        //         ]) {
+        //             sh '''
+        //                 export ANSIBLE_HOST_KEY_CHECKING=False
+        //                 export LANG=en_US.UTF-8
+        //                 export LC_ALL=en_US.UTF-8
+
+        //                 # Copy cert locally if needed
+        //                 cp $WIN_CERT win11.crt
+
+        //                 ansible-playbook -i ansible_win/inventory.ini \
+        //                 ansible_win/deploy.yml \
+        //                 --extra-vars "ansible_password=$WIN_PASSWORD"
+        //             '''
+        //         }
+        //     }
+        // }
+
+
     }
+    
+
 
     post {
         success {
-            echo "✅ Pipeline completed successfully!"
+            echo "Pipeline completed successfully!"
         }
         failure {
-            echo "❌ Pipeline failed."
+            echo "Pipeline failed."
         }
     }
 }
