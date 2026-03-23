@@ -143,7 +143,7 @@ pipeline {
             steps {
                 withCredentials([
                     string(credentialsId: "${WIN_PASSWORD_ID}", variable: 'WIN_PASSWORD'),
-                    file(credentialsId: "${WIN_CERT_ID}", variable: 'WIN_CERT')
+                    file(credentialsId: "${WINRM_CERT_ID}", variable: 'WIN_CERT')
                 ]) {
                     sh '''
                         export ANSIBLE_HOST_KEY_CHECKING=False
