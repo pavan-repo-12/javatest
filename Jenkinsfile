@@ -140,10 +140,9 @@ pipeline {
                         export ANSIBLE_HOST_KEY_CHECKING=False
                         export LANG=en_US.UTF-8
                         export LC_ALL=en_US.UTF-8
-
+                        
                         # Copy cert locally if needed
-                        cp $WIN_CERT /tmp/win11.crt
-                        chmod 644 /tmp/win11.crt
+                        ls -l 
                         ansible-playbook -i ansible_win/inventory.ini \
                         ansible_win/deploy.yml \
                         --extra-vars "ansible_password=$WIN_PASSWORD"
