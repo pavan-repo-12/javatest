@@ -93,7 +93,7 @@ pipeline {
                         git add k8s/deployment.yaml
                         git commit -m "Update deployment image to ${IMAGE_NAME_FULL} [ci skip]" || echo "No changes to commit"
 
-                        git push https://pavan-repo-12:${GIT_TOKEN}@github.com/pavan-repo-12/javatest.git feature/javatest
+                        git push https://pavan-repo-12:${GIT_TOKEN}@github.com/pavan-repo-12/javatest.git feature/javawinlinvm
                     '''
                 }
             }
