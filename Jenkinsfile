@@ -42,7 +42,8 @@ pipeline {
         stage('Snyk Security Scan') {
             steps {
                 sh """
-               snyk monitor --all-projects --org=6b376763-31f1-4d40-a030-2dff2da4c843 --severity-threshold=high
+                snyk test --all-projects --org=6b376763-31f1-4d40-a030-2dff2da4c843 --severity-threshold=high
+                snyk monitor --all-projects --org=6b376763-31f1-4d40-a030-2dff2da4c843 --severity-threshold=high
                 """
             }
         }
